@@ -16,14 +16,37 @@ export class AccountController {
     addEmployee(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             const employee = yield convertEmployeeDtoToEmployee(dto);
-            const result = yield this.service.hireEmployee(employee);
-            return result;
+            return yield this.service.hireEmployee(employee);
         });
     }
     getAllEmployees() {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.service.getAllEmployees();
-            return result;
+            return yield this.service.getAllEmployees();
+        });
+    }
+    changePassword(empId, newPassword) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.service.changePassword(empId, newPassword);
+        });
+    }
+    fireEmployee(empId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.service.fireEmployee(empId);
+        });
+    }
+    getEmployeeById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.service.getEmployeeById(id);
+        });
+    }
+    setRole(empId, newRole) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.service.setRole(empId, newRole);
+        });
+    }
+    updateEmployee(employeeDto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.service.updateEmployee(employeeDto);
         });
     }
 }

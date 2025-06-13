@@ -8,12 +8,25 @@ export class AccountController {
 
     async addEmployee(dto: EmployeeDto) {
         const employee = await convertEmployeeDtoToEmployee(dto);
-        const result = await this.service.hireEmployee(employee)
-        return result;
+        return await this.service.hireEmployee(employee);
     }
 
     async getAllEmployees() {
-        const result = await this.service.getAllEmployees()
-        return result;
+        return await this.service.getAllEmployees();
+    }
+    async changePassword(empId: string, newPassword: string) {
+        return await this.service.changePassword(empId, newPassword);
+    }
+    async fireEmployee(empId: string) {
+        return await this.service.fireEmployee(empId);
+    }
+    async getEmployeeById(id: string) {
+        return await this.service.getEmployeeById(id);
+    }
+    async setRole(empId: string,newRole: string[]) {
+        return await this.service.setRole(empId, newRole);
+    }
+    async updateEmployee(employeeDto: EmployeeDto) {
+        return await this.service.updateEmployee(employeeDto);
     }
 }

@@ -29,5 +29,6 @@ export const convertEmployeeToFiredEmployeeDto =(emp:Employee)=>{
         firstName:emp.firstName,
         lastName:emp.lastName,
         id:emp.id,
+        table_num: emp.table_num,
     }
 }

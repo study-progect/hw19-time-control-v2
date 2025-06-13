@@ -21,3 +21,30 @@ accountRouter.get('/', asyncHandler((req, res) => __awaiter(void 0, void 0, void
     const result = yield controller.getAllEmployees();
     res.json(result);
 })));
+accountRouter.get('/:id', asyncHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield controller.getEmployeeById(id);
+    res.status(201).json(result);
+})));
+accountRouter.delete('/:id', asyncHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield controller.fireEmployee(id);
+    res.status(201).json(result);
+})));
+accountRouter.patch('/', asyncHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const result = yield controller.updateEmployee(body);
+    res.status(201).json(result);
+})));
+accountRouter.patch('/:id/role', asyncHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { role } = req.body;
+    const result = yield controller.setRole(id, role);
+    res.status(201).json(result);
+})));
+accountRouter.patch('/:id/pass', asyncHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { password } = req.body;
+    const result = yield controller.changePassword(id, password);
+    res.status(201).json(result);
+})));

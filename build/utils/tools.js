@@ -32,5 +32,6 @@ export const convertEmployeeToFiredEmployeeDto = (emp) => {
         firstName: emp.firstName,
         lastName: emp.lastName,
         id: emp.id,
+        table_num: emp.table_num,
     };
 };

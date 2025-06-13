@@ -1,16 +1,35 @@
 import {AccountingService} from "./AccountingService.js";
 import {Employee, EmployeeDto, SavedFiredEmployee} from "../../model/Employee.js";
 import {checkFiredEmployees, convertEmployeeToFiredEmployeeDto, getError} from "../../utils/tools.js";
-import {EmployeeModel} from "../../model/EmployeeMongo.js";
+import {EmployeeModel, FiredEmployeeModel} from "../../model/EmployeeMongo.js";
+import bcrypt from "bcrypt";
+import {Role} from "../../utils/timeControlTypes.js";
 
 export class AccountingServiceMongoImpl implements  AccountingService{
-    changePassword(empId: string, newPassword: string): Promise<void> {
-        return Promise.resolve(undefined);
+
+
+    async changePassword(empId: string, newPassword: string): Promise<void> {
+        const employee = await EmployeeModel.findOne({id: empId});
+        if(!employee) throw new Error(JSON.stringify({status: 404, message: `Employee ${empId} Not Found`}))
+        employee.hash = await bcrypt.hash(newPassword, bcrypt.genSaltSync(10))
+        await employee.save()
     }
 
-    fireEmployee(empId: string): Promise<SavedFiredEmployee> {
-        throw ''
+
+
+    async fireEmployee(empId: string): Promise<SavedFiredEmployee> {
+        const employee = await EmployeeModel.findOneAndDelete<Employee>({id:empId})
+        if (!employee) {
+            throw Error(JSON.stringify({status: 404, message: `Employee by id ${empId} Not Found`}))
+        }
+        const convertEmployee = convertEmployeeToFiredEmployeeDto(employee);
+        const employeeDoc = new FiredEmployeeModel(convertEmployee);
+        employeeDoc.fireDate = new Date() as unknown as string;
+        await employeeDoc.save()
+        return employeeDoc as SavedFiredEmployee;
     }
+
+
 
     async getAllEmployees(): Promise<SavedFiredEmployee[]> {
         const result = await EmployeeModel.find<Employee>({})
@@ -19,8 +38,10 @@ export class AccountingServiceMongoImpl implements  AccountingService{
         return Promise.resolve(employees);
     }
 
-    getEmployeeById(id: string): Promise<Employee> {
-        throw ''
+    async getEmployeeById(id: string): Promise<Employee> {
+        const result = await EmployeeModel.findOne<Employee>({id:id});
+        if(!result) throw new Error(JSON.stringify({status: 404, message: `Employee ${id} Not Found`}))
+        return result
     }
 
     async hireEmployee(employee: Employee): Promise<Employee> {
@@ -32,12 +53,24 @@ export class AccountingServiceMongoImpl implements  AccountingService{
         return employeeDoc as Employee
     }
 
-    setRole(newRole: string): Promise<Employee> {
-        throw ''
+    async setRole(empId: string,newRole: string[]): Promise<Employee> {
+        const employee = await EmployeeModel.findOne({id: empId});
+        if(!employee) throw new Error(JSON.stringify({status: 404, message: `Employee ${empId} Not Found`}))
+        employee.roles = newRole as Role[];
+        await employee.save()
+        return employee as Employee;
     }
 
-    updateEmployee(employee: EmployeeDto): Promise<Employee> {
-        throw ''
+
+
+    async updateEmployee(employeeDto: EmployeeDto): Promise<Employee> {
+        const employee = await EmployeeModel.findOne({id: employeeDto.id});
+        if(!employee) throw new Error(JSON.stringify({status: 404, message: `Employee ${employeeDto.id} Not Found`}))
+        employee.lastName = employeeDto.lastName
+        employee.firstName = employeeDto.firstName
+        await employee.save()
+
+        return employee as Employee;
     }
 
 }

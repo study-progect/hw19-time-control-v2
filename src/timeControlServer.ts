@@ -15,7 +15,7 @@ export const launchServer = () => {
        .catch(err => console.log(err.message))
 //====================Middleware===============
    app.use(express.json())
-   app.use(validateBody(joiSchemas))
+   // app.use(validateBody(joiSchemas))
 //====================Routing==================
 app.use('/accounts', accountRouter)
 //====================errorHandling============
