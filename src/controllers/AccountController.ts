@@ -1,0 +1,19 @@
+import {AccountingService} from "../services/AccountingService/AccountingService.js";
+import {AccountingServiceMongoImpl} from "../services/AccountingService/AccountingServiceMongoImpl.js";
+import {EmployeeDto} from "../model/Employee.js";
+import {convertEmployeeDtoToEmployee} from "../utils/tools.js";
+
+export class AccountController {
+    private service: AccountingService = new AccountingServiceMongoImpl();
+
+    async addEmployee(dto: EmployeeDto) {
+        const employee = await convertEmployeeDtoToEmployee(dto);
+        const result = await this.service.hireEmployee(employee)
+        return result;
+    }
+
+    async getAllEmployees() {
+        const result = await this.service.getAllEmployees()
+        return result;
+    }
+}
